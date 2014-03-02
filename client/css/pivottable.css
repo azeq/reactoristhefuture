@@ -1,0 +1,37 @@
+@keyframes myfirst {
+from {background-color: red;}
+to {background-color: white;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes myfirst {
+from {background-color: red;}
+to {background-color: white;}
+}
+
+@keyframes mySecond {
+from {background-color: green;}
+to {background-color: white;}
+}
+
+@-webkit-keyframes mySecond {
+from {background-color: green;}
+to {background-color: white;}
+}
+
+.cell{
+    background-color: white;
+    animation: myfirst 1.0s;
+	-webkit-animation: myfirst 1.0s; /* Safari and Chrome */
+}
+
+.cell2{
+    background-color: white;
+    animation: mySecond 1.0s;
+	-webkit-animation: mySecond 1.0s; /* Safari and Chrome */
+}
+
+.space-top-bottom{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
