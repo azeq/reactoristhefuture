@@ -8,6 +8,14 @@ ReqButton = React.createClass({
 	}
 });
 
+ReqButtonModal = React.createClass({
+	render: function(){
+		return (
+			<button className={this.props.className} type="button" data-dismiss="modal" onClick={this.props.onclickHandler}>{this.props.title}</button>
+			);
+	}
+});
+
 var RequestButtons = React.createClass({
 	changeData: function(dataNew){
 		this.props.handler(dataNew);

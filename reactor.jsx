@@ -22,6 +22,17 @@ if (Meteor.isClient) {
       Session.set("bks", bks);
       console.log("Bks have been updated");       
     }
+  });  
+
+  Deps.autorun(function () {
+    var bkToBeSaved = Session.get("saveBk");
+    if(bkToBeSaved){
+      console.log("Saving bk...");
+      console.log(bkToBeSaved);
+      Bookmarks.insert(bkToBeSaved, function(){
+        console.log("saved in DB");
+      });
+    }
   });
 }
 

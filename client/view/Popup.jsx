@@ -2,11 +2,14 @@
 
 //Modal
 Content = React.createClass({
+	getContent: function() {
+		return this.refs.input.getDOMNode().value;
+	},
   	render: function () {
 	    return (
 			<div className="input-group">
 			  <span className="input-group-addon">Name</span>
-			  <input type="text" className="form-control" placeholder="Name" />
+			  <input ref="input" type="text" className="form-control" placeholder="Name"/>
 			</div>
     	);
   	}
@@ -24,11 +27,11 @@ Popup = React.createClass({
 			        <h4 className="modal-title" id="myModalLabel">{this.props.title}</h4>
 			      </div>
 			      <div className="modal-body">
-			        	<Content/>
+			        	<Content ref={this.props.refChild}/>
 			      </div>
 			      <div className="modal-footer">
 			        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-			        <ReqButton title={"Save"} className={"btn btn-primary"} onclickHandler={this.props.onOkHandler}/>
+			        <ReqButtonModal title="Save" className="btn btn-primary" onclickHandler={this.props.onOkHandler}/>
 			      </div>
 			    </div>
 			  </div>

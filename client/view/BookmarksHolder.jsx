@@ -17,7 +17,7 @@ BookmarksHolder = React.createClass({
       <div className="list-group">
       {this.state.bks.map(function(bk){
           return(
-              <a href="#" className="list-group-item" onClick={self.clickHandler.bind(self, bk)}>{bk._id}</a>
+              <a href="#" className="list-group-item" onClick={self.clickHandler.bind(self, bk)} key={bk._id}>{bk.name}</a>
             );
         })}
       </div>
