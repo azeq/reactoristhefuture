@@ -1,29 +1,41 @@
 /** @jsx React.DOM */
 
 Wizard = React.createClass({
-	getInitialState: function() {
+	mixins: [ReactMeteor.Mixin],
+	getMeteorState: function() {
 		return {
-			connectState: "label-default",
-			info: "Not connected",
-		};
+			connectionState: Session.get("connectionState"),
+		}
 	},
-	run: function(){
-		webSocket = createWebSocket(this.refs.refMdxEditor.getDOMNode().value, this);
+	run: function() {
+		this.webSocket = createWebSocket(this.refs.refMdxEditor.getDOMNode().value);
 	},
-	clear: function(){
+	clear: function() {
 		this.refs.refMdxEditor.getDOMNode().value = "";
-		webSocket.close();
+		this.webSocket.close();
+	},
+	openPopup: function() {
+		$('#myModal').modal('show');//show the modal
+	},
+	saveBookmark: function() {
+		// Bookmarks.insert(bk, function(){
+		// 	console.log("saved in DB");
+		// });
+ 		var bk = {name: "New bookmark", mdx : this.refs.refMdxEditor.getDOMNode().value};
+		console.log(bk);
 	},
 	render: function () {
 		return (
 			<div>
+				<Popup title={"Save bookmark"} onOkHandler={this.saveBookmark}/>
 				<MdxEditor ref="refMdxEditor"/>
 				<div className={"btn-group"}>
 					<ReqButton title={"Run"} className={"btn btn-primary"} onclickHandler={this.run}/>
 					<ReqButton title={"Clear"} className={"btn"} onclickHandler={this.clear}/>
+					<ReqButton title={"Save"} className={"btn btn-primary"} onclickHandler={this.openPopup}/>
 				</div>
 					<div className="pull-right">
-						<ConnectionLabel connectState={this.state.connectState} info={this.state.info}/>
+						<ConnectionLabel connectState={this.state.connectionState.connectionState} info={this.state.connectionState.connectionInfo}/>
 					</div>
 			</div>
 		);
