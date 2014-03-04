@@ -15,19 +15,17 @@ Wizard = React.createClass({
 		this.webSocket.close();
 	},
 	openPopup: function() {
-		this.refs.popup.refs.content.refs.input.getDOMNode().value = "";
 		$('#myModal').modal('show');//show the modal
 	},
-	saveBookmark: function() {
-		var title = this.refs.popup.refs.content.refs.input.getDOMNode().value;
+	saveAction: function(bookmarkName){
 		var mdx = this.refs.refMdxEditor.getDOMNode().value;
- 		var bk = {name: title, mdx : mdx};
+ 		var bk = {name: bookmarkName, mdx: mdx};
 		Session.set("saveBk", bk);//event save bk
 	},
 	render: function () {
 		return (
 			<div>
-				<Popup title="Save bookmark" ref="popup" refChild="content" onOkHandler={this.saveBookmark}/>
+				<Popup title="Save bookmark" onsaveHandler={this.saveAction}/>
 				<MdxEditor ref="refMdxEditor"/>
 				<div className="btn-group">
 					<ReqButton title="Run" className={"btn btn-primary"} onclickHandler={this.run}/>

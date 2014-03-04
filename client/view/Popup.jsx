@@ -1,15 +1,15 @@
 /** @jsx React.DOM */
 
 //Modal
-Content = React.createClass({
-	getContent: function() {
-		return this.refs.input.getDOMNode().value;
+PopUpContent = React.createClass({
+	onchangeHandler: function(evt){
+		this.props.callback(evt.target.value);
 	},
   	render: function () {
 	    return (
 			<div className="input-group">
 			  <span className="input-group-addon">Name</span>
-			  <input ref="input" type="text" className="form-control" placeholder="Name"/>
+			  <input type="text" className="form-control" placeholder="Name" onChange={this.onchangeHandler}/>
 			</div>
     	);
   	}
@@ -17,6 +17,12 @@ Content = React.createClass({
 
 //Modal
 Popup = React.createClass({
+	getName: function(name){
+		this.bookmarkName = name;//record the name on onchange event
+	},
+	save: function(){
+		this.props.onsaveHandler(this.bookmarkName);//callback
+	},
   	render: function () {
 	    return (
 			<div className="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -27,11 +33,11 @@ Popup = React.createClass({
 			        <h4 className="modal-title" id="myModalLabel">{this.props.title}</h4>
 			      </div>
 			      <div className="modal-body">
-			        	<Content ref={this.props.refChild}/>
+			        	<PopUpContent callback={this.getName}/>
 			      </div>
 			      <div className="modal-footer">
 			        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-			        <ReqButtonModal title="Save" className="btn btn-primary" onclickHandler={this.props.onOkHandler}/>
+			        <ReqButtonModal title="Save" className="btn btn-primary" onclickHandler={this.save}/>
 			      </div>
 			    </div>
 			  </div>
