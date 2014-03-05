@@ -5,7 +5,7 @@ Bookmarks = new Meteor.Collection("bookmarks");
 if (Meteor.isClient) {
   Meteor.startup(function() {
     //Init some view components with datas
-    Session.set("data", data13);//init table
+    Session.set("data", data14);//init table
     Session.set("connectionState", {connectionState: "label-default", connectionInfo: "Not connected"});//init table
 
     //Build the view
