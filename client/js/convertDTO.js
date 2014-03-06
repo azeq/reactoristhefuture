@@ -27,6 +27,8 @@ var total = debug ? "**" : "Total ";//Total "; //not now
 var cutPath = debug ? "^" : "";
 var dealAllMem = debug ? "$": "";
 var lastAllMem = debug ? "€": "";
+var drill1 = "000";//Equivalent to cut, so ^ equal to this 
+var drill2 = "---";//Equivalent to cut, so ^ equal to this
 
 convert = function convert(cellSetDtoInit){
 	print(cellSetDtoInit);
@@ -49,13 +51,34 @@ convert = function convert(cellSetDtoInit){
 				var path = member.path.path;
 
 				var memberDisplayName = member.displayName;
+
+				cellSetDto.axes[i].positions[j].members[k].isADrilldown = false;
+				//check if it is a drilldown
+				if(j+1<nPos){
+					var memberOnNextPos = positions[j+1].members[k];
+					var isADd = isADrilldown(member, memberOnNextPos);
+					cellSetDto.axes[i].positions[j].members[k].isADrilldown = isADd;
+					print("pos="+j+" mem="+k+"  **  "+member.displayName+" / "+memberOnNextPos.displayName+" * "+isADd);
+				}
+
+				if(cellSetDto.axes[i].positions[j].members[k].isADrilldown){
+					memberDisplayName = drill1+memberDisplayName;
+					print(memberDisplayName);
+				}
+				
 				//first condition to avoid AllMember member
 				if(member.path.path.length > 1 && k+1 < nMem && members[k+1].levelName == "ALL"){
 					//if the next member has ALL for level, then it is a total
 					dispNameTotal = member.displayName;//save dispNameTotal
 					memberDisplayName = total+dispNameTotal;
+
+					if(cellSetDto.axes[i].positions[j].members[k].isADrilldown){
+						memberDisplayName = drill2+memberDisplayName;
+						print(memberDisplayName);
+					}
+
 					cellSetDto.axes[i].positions[j].members[k].displayName = memberDisplayName; 
-					newPath = path.slice(0);
+					newPath = path.slice(0);//copy path
 				} else if(dispNameTotal != null && member.levelName == "ALL"){
 					//for the last member of a position
 					memberDisplayName = total+dispNameTotal;
@@ -75,10 +98,6 @@ convert = function convert(cellSetDtoInit){
 					//deals AllMember only
 					for(var l = 0; l<max[k]-1; l +=1){
 						// print("pos="+j+"  **  k="+k+";s="+s+";l="+l+"  **  "+(s)+"  **  "+path[l]+ "  **  "+path);
-						if(l == 0){
-							//identify a drilldown
-							//not possible, the elemnt are not build yet
-						}
 						cellSetDto.axes[i].positions[j].members.splice(s+l, 0, {"displayName":dealAllMem+memberDisplayName});
 						cellSetDto.axes[i].positions[j].members[s+l].path = {};// = path;
 						cellSetDto.axes[i].positions[j].members[s+l].path.path = newPath != null ? newPath.slice(0) : path.slice(0);//copy the path of the member
@@ -109,8 +128,13 @@ function isADrilldown(member, memberOnNextPos){
 	var path = member.path.path;
 	var nextPath = memberOnNextPos.path.path;
 	var n = path.length;
-	if(n <= newPath.length && n > 0){
-		return path[n-1] == newPath[n-1];//normally, should compare all elements of path
+	if(nextPath.length-n == 1 && n > 1){
+		var a = true;
+		for(var i = 0; i<n; i +=1){
+			a = a && path[i] == nextPath[i];//compare all elements of the path one by one
+			//print(path[i]+ "  **  "+nextPath[i]);
+		}
+		return a;
 	}
 	return false;
 }
