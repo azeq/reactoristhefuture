@@ -75,6 +75,10 @@ function cellValue(myData, a, c, b, i, j){
 	return value;
 }
 
+function generateCellValue(myData){
+
+}
+
 //For a given column, compute the number of consecutive occurrences of a value (input parameter) 
 function computeRowSpan(value, myData, a, c, b, d, i, j){
 	var occ = 1;

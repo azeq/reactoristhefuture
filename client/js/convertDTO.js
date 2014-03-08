@@ -52,19 +52,17 @@ convert = function convert(cellSetDtoInit){
 
 				var memberDisplayName = member.displayName;
 
-				cellSetDto.axes[i].positions[j].members[k].isADrilldown = false;
+				var isADd = false;
 				//check if it is a drilldown
 				if(j+1<nPos){
 					var memberOnNextPos = positions[j+1].members[k];
-					var isADd = isADrilldown(member, memberOnNextPos);
+					isADd = isADrilldown(member, memberOnNextPos);
 					cellSetDto.axes[i].positions[j].members[k].isADrilldown = isADd;
-					print("pos="+j+" mem="+k+"  **  "+member.displayName+" / "+memberOnNextPos.displayName+" * "+isADd);
-				}
-
-				if(cellSetDto.axes[i].positions[j].members[k].isADrilldown){
-					memberDisplayName = drill1+memberDisplayName;
-					print(memberDisplayName);
-				}
+					// print("pos="+j+" mem="+k+"  **  "+member.displayName+" / "+memberOnNextPos.displayName+" * "+isADd);
+					if(isADd)
+						memberDisplayName = drill1+memberDisplayName;
+				}else
+					cellSetDto.axes[i].positions[j].members[k].isADrilldown = isADd;
 				
 				//first condition to avoid AllMember member
 				if(member.path.path.length > 1 && k+1 < nMem && members[k+1].levelName == "ALL"){
@@ -72,10 +70,8 @@ convert = function convert(cellSetDtoInit){
 					dispNameTotal = member.displayName;//save dispNameTotal
 					memberDisplayName = total+dispNameTotal;
 
-					if(cellSetDto.axes[i].positions[j].members[k].isADrilldown){
+					if(isADd)
 						memberDisplayName = drill2+memberDisplayName;
-						print(memberDisplayName);
-					}
 
 					cellSetDto.axes[i].positions[j].members[k].displayName = memberDisplayName; 
 					newPath = path.slice(0);//copy path
