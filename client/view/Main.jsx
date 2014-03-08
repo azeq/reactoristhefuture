@@ -32,9 +32,16 @@ var Right = React.createClass({
 });
 
 Main = React.createClass({
+	getInitialState : function() {
+		return (
+			{ items : this.props.items }
+		);
+	},
 	render: function () {
 		return (
-					<Right/>
+			<div>
+				<Search items={search_data}/>
+        	</div>
         );
 	}
 });
