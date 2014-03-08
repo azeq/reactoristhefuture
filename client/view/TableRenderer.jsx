@@ -27,28 +27,28 @@ tableRendering = function tableRendering(myData){
 			var key = Cantor(i,j);//Cantor function for a unique key
 			if(!(key in map)){
 				//only the header cells are concerned
-				// if(i<c || j<b){
-				// 	if(nextColValue == value && j+1<a+b){
-				// 		colspan += 1;//increase colspan if the following value is the same
-				// 	}else{
-				// 		var rowspan = computeRowSpan(value, myData, a, c, b, d, i, j);//compute rowspan
-				// 		if(rowspan>1){
-				// 			for(var m = i+1; m<i+rowspan; m += 1){
-				// 				for(var n = j-colspan+1; n<=j; n += 1){
-				// 					map[Cantor(m,n)] = [i, j];//store the position of cells that won't be 
-				// 					//visited since rowspan is higher than one
-				// 				}
-				// 			}
-				// 		}
-				// 		// un/comment - useful for debugging
-				// 		// console.log('('+i+','+j+') || rowspan: '+rowspan+' || colspan: '+colspan +' || value: '+value);
-				// 		cells.push(<Header cellValue={value} key={key} colspan={colspan} rowspan={rowspan}/>);
-				// 		colspan = 1;
-				// 	}
-				// }else{
+				if(i<c || j<b){
+					if(nextColValue == value && j+1<a+b){
+						colspan += 1;//increase colspan if the following value is the same
+					}else{
+						var rowspan = computeRowSpan(value, myData, a, c, b, d, i, j);//compute rowspan
+						if(rowspan>1){
+							for(var m = i+1; m<i+rowspan; m += 1){
+								for(var n = j-colspan+1; n<=j; n += 1){
+									map[Cantor(m,n)] = [i, j];//store the position of cells that won't be 
+									//visited since rowspan is higher than one
+								}
+							}
+						}
+						// un/comment - useful for debugging
+						// console.log('('+i+','+j+') || rowspan: '+rowspan+' || colspan: '+colspan +' || value: '+value);
+						cells.push(<Header cellValue={value} key={key} colspan={colspan} rowspan={rowspan}/>);
+						colspan = 1;
+					}
+				}else{
 					//ordinary cell
 					cells.push(<Cell cellValue={value} key={key}/>);
-				// }
+				}
 			}
 		}	
 	rows.push(<Row row={cells} key={i}/>);//push new row in array
@@ -60,10 +60,10 @@ tableRendering = function tableRendering(myData){
 function cellValue(myData, a, c, b, i, j){
 	var value = "";
 	if(i<c && j>=b)
-		value = myData.axes[0].positions[j-b].members[i].displayName;
+		value = generateCellValue(myData.axes[0].positions[j-b].members[i]);
 	else if(i>=c && j<b){
 		var index = myData.axes.length > 1 ? 1 : 0;
-		value = myData.axes[index].positions[i-c].members[j].displayName;
+		value = generateCellValue(myData.axes[index].positions[i-c].members[j]);
 	}else if(i>=c && j>=b){
 		var currentOrdinal = (i-c)*a+(j-b);
 		for(var k = 0; k < myData.cells.length; k += 1)
@@ -75,9 +75,24 @@ function cellValue(myData, a, c, b, i, j){
 	return value;
 }
 
-function generateCellValue(myData){
-
+function generateCellValue(member){
+	if(member.isTotal || member.isADrilldown)
+		return "Total "+member.displayName;
+	else if(member.displayName == "AllMember")
+		return "Grand Total";
+	else
+		return member.displayName;
 }
+
+//for debug
+// function generateCellValue(member){
+// 	if(member.isTotal)
+// 		return member.displayName+ " !!! ";
+// 	else if(member.isADrilldown)
+// 		return member.displayName+ " ??? ";
+// 	else
+// 		return member.displayName;
+// }
 
 //For a given column, compute the number of consecutive occurrences of a value (input parameter) 
 function computeRowSpan(value, myData, a, c, b, d, i, j){
