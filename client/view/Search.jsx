@@ -33,15 +33,19 @@ Search = React.createClass({
 				var item = this.state.items[this.state.active];
 				var newItems = retrieveItem(this.props.items, item.name, typeToSubType[item.type]);
 				newItems = flat(newItems);
-				if(newItems.length > 0)
+				if(newItems.length > 0){
+					//add filter item to the list
+					newItems.splice(0, 0, { type : "filter", name : "Create filter" });
 					this.setState({ items : newItems, active : 0 });
+				}
 			}
 		} else if(event.key == "ArrowLeft"){
-			this.setState({ items : flat(this.props.items), active : 0});
+			this.setState({ items : flat(this.props.items), active : 0 });
 		} else if(event.key == "Enter"){
 			if(this.state.items.length > 0){
 				var item = this.state.items[this.state.active];
 				console.log("Add "+item.name+" "+item.type+" to the view");
+				return false;//to not reload the page when enter is pressed
 			}
 		}
 	},	
@@ -63,44 +67,51 @@ Search = React.createClass({
 						</div>
 					</div>
 				</nav>
-				<List ref="list" items={this.state.items} active={this.state.active}/>
+				<List ref="list" items={this.state.items} active={this.state.active} />
 			</div>
 			);
 	}
 });
 
 List = React.createClass({
+	buildItem: function (classNameLink, classNameIcon, type, name){
+		return (<a href="#" className={classNameLink} key={type+"/"+name}>
+				<span className={classNameIcon}></span>{"   "}{name}
+				</a>);
+	},
 	render: function () {
 		var createItem = function(item, index) {
 			var cl = "list-group-item";
 			if(index == this.props.active)
 				cl += " active";
 
-			var gly = "glyphicon ";
+			var gly = "glyphicon";
 			switch(item.type){
 				case "dimension":
-					gly += "glyphicon-certificate";
+					gly += " glyphicon-certificate";
 					break;
 				case "hierarchy":
-					gly += "glyphicon-magnet";
+					gly += " glyphicon-magnet";
 					break;
 				case "level":
-					gly += "glyphicon-leaf";
+					gly += " glyphicon-leaf";
 					break;			
 				case "measure":
-					gly += "glyphicon-screenshot";
+					gly += " glyphicon-screenshot";
+					break;
+				case "filter":
+					gly += " glyphicon-cog";
+					cl += " list-group-item-warning";
 					break;
 			}
 
-      		return (<a href="#" className={cl} key={item.type+"/"+item.name}>
-      				<span className={gly}></span>{"   "}{item.name}
-      				</a>);
+      		return this.buildItem(cl, gly, item.type, item.name);
     	};
 		return (
 			<div className="list-group search-list search-size">
 				{this.props.items.map(createItem, this)}
 			</div>
-			);
+		);
 	}
 });
 
