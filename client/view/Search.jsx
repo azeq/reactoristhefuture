@@ -4,20 +4,23 @@ Search = React.createClass({
 	getInitialState : function() {
 		return (
 			{ 
-				items : this.props.items,
+				items : flat(this.props.items),
 				active : 0
 			 }
 		);
 	},
-	onchangeHandler : function() {
+	setListVisibility: function(visibility) {
+		this.refs.list.getDOMNode().style.visibility = visibility;
+	},
+	onchangeHandler: function() {
 		var re = new RegExp(this.refs.search.getDOMNode().value, "i");
 		var res = [];
 		//filter on props.items and not state.items
-		this.props.items.map(function(item){
-			if(item.search(re) >= 0)
+		flat(this.props.items).map(function(item){
+			if(item.name.search(re) >= 0)
 				res.push(item);
 		});
-		this.setState({ items : res});
+		this.setState({ items : res, active : 0});
 	}, 
 	onkeydownHandler: function(event){
 		if(event.key == "ArrowDown" || event.key == "ArrowUp"){
@@ -26,9 +29,20 @@ Search = React.createClass({
 			if(newActive >= 0 && newActive < this.state.items.length)
 				this.setState({ active : this.state.active + shift });
 		} else if(event.key == "ArrowRight"){
-			console.log(event.key);
+			if(this.state.items.length > 0){
+				var item = this.state.items[this.state.active];
+				var newItems = retrieveItem(this.props.items, item.name, typeToSubType[item.type]);
+				newItems = flat(newItems);
+				if(newItems.length > 0)
+					this.setState({ items : newItems, active : 0 });
+			}
+		} else if(event.key == "ArrowLeft"){
+			this.setState({ items : flat(this.props.items), active : 0});
 		} else if(event.key == "Enter"){
-			console.log(event.key);
+			if(this.state.items.length > 0){
+				var item = this.state.items[this.state.active];
+				console.log("Add "+item.name+" "+item.type+" to the view");
+			}
 		}
 	},	
 	render: function () {
@@ -39,13 +53,17 @@ Search = React.createClass({
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<form className="navbar-form navbar-left" role="search">
 								<div className="form-group">
-									<input ref="search" type="text" className="form-control" placeholder="Search" size="100" onChange={this.onchangeHandler} onKeyDown={this.onkeydownHandler}/>
+									<input ref="search" type="text" className="search-size form-control" placeholder="Search" 
+										onChange={this.onchangeHandler} 
+										onKeyDown={this.onkeydownHandler}
+										onFocus={this.setListVisibility.bind(this, "visible")}
+										onBlur={this.setListVisibility.bind(this, "hidden")}/>
 								</div>
 							</form>
 						</div>
 					</div>
 				</nav>
-				<List items={this.state.items} active={this.state.active}/>
+				<List ref="list" items={this.state.items} active={this.state.active}/>
 			</div>
 			);
 	}
@@ -53,14 +71,33 @@ Search = React.createClass({
 
 List = React.createClass({
 	render: function () {
-		var createItem = function(itemText, index) {
+		var createItem = function(item, index) {
 			var cl = "list-group-item";
 			if(index == this.props.active)
 				cl += " active";
-      		return <a href="#" className={cl}>{itemText}</a>;
+
+			var gly = "glyphicon ";
+			switch(item.type){
+				case "dimension":
+					gly += "glyphicon-certificate";
+					break;
+				case "hierarchy":
+					gly += "glyphicon-magnet";
+					break;
+				case "level":
+					gly += "glyphicon-leaf";
+					break;			
+				case "measure":
+					gly += "glyphicon-screenshot";
+					break;
+			}
+
+      		return (<a href="#" className={cl} key={item.type+"/"+item.name}>
+      				<span className={gly}></span>{"   "}{item.name}
+      				</a>);
     	};
 		return (
-			<div className="list-group">
+			<div className="list-group search-list search-size">
 				{this.props.items.map(createItem, this)}
 			</div>
 			);

@@ -35,3 +35,16 @@ to {background-color: white;}
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
+.search-list{
+	max-height: 247px;
+	position: absolute;
+	top: 45px;
+	margin-left: 47px;
+	overflow: auto;
+	visibility: hidden;/*turn it to visible for testing*/
+}
+
+.search-size{
+	width: 500px !important;
+}

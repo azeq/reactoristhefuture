@@ -40,7 +40,7 @@ Main = React.createClass({
 	render: function () {
 		return (
 			<div>
-				<Search items={search_data}/>
+				<Search items={cube}/>
         	</div>
         );
 	}
