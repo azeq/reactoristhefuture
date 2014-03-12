@@ -3,7 +3,7 @@
 var Left = React.createClass({
 	render: function () {
 		return (
-			<div className="col-md-4">
+			<div className="col-md-3">
 				<ul className="nav nav-tabs">
 					<li className="active"><a href="#wiz" data-toggle="tab">Wizard</a></li>
 					<li><a href="#bookmarks" data-toggle="tab">Bookmarks</a></li>
@@ -24,7 +24,7 @@ var Left = React.createClass({
 var Right = React.createClass({
 	render: function () {
 		return (
-			<div className="col-md-8">
+			<div className="col-md-9">
 	            <Table/>
 	        </div>
         );
@@ -32,30 +32,17 @@ var Right = React.createClass({
 });
 
 Main = React.createClass({
-	getInitialState : function() {
-		return (
-			{ items : this.props.items }
-		);
-	},
 	render: function () {
 		return (
 			<div>
-				<Search items={cube}/>
-        	</div>
+				<Search cubeDescription={new CubeDescription(cube)}/>
+				<div className="container-fluid" id="main">
+					<div className="row">
+						<Left/>
+						<Right/>
+		            </div>
+	            </div>
+            </div>
         );
 	}
 });
-
-// Main = React.createClass({
-// 	render: function () {
-// 		return (
-// 			<div>
-// 				<h3>{this.props.title}</h3>
-// 				<div className="row">
-// 					<Left/>
-// 					<Right/>
-// 	            </div>
-//             </div>
-//         );
-// 	}
-// });

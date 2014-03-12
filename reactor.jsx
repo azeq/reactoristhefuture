@@ -11,7 +11,7 @@ if (Meteor.isClient) {
     //Build the view
     React.renderComponent(
       <Main title={".title."}/>,
-      document.getElementById('main')
+      document.body
       );
   });
 

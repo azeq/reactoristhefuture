@@ -59,52 +59,91 @@ cube =
 
 typeToSubType = { "dimension" : "hierarchies", "hierarchy" : "levels"};
 
+CubeDescription = function(cube){
+	this.cube = cube;
+};
+
+CubeDescription.prototype.getCube = function(){
+	return this.cube;
+};
+
+CubeDescription.prototype.getFlatCube = function(){
+	return this.flattenItem(this.cube);
+};
+
+CubeDescription.prototype.getCubeDescriptionAsArray = function(){
+	return this.flattenItemImpl(this.cube, []);
+};
+
+CubeDescription.prototype.flattenItem = function(item){
+	return this.flattenItemImpl(item, []);
+};
+
 //flatten item and turn it into an array {name, type}
 //item is a json olap entity
-function flatImpl(item, tab){
+CubeDescription.prototype.flattenItemImpl = function(item, tab){
 	for(var key in item){
 		if(item.hasOwnProperty(key) && key != "type"){
 			if(item[key] instanceof Array){
 				item[key].map(function(a){
-					flatImpl(a, tab);
-				});
+					this.flattenItemImpl(a, tab);
+				}.bind(this));
 			}else if(key == "name"){
 				tab.push({ "name" : item["name"], "type" : item["type"] });
 			}else{
-				flatImpl(item[key], tab);
+				this.flattenItemImpl(item[key], tab);
 			}
 		}
 	}
 	return tab;
-}
+};
 
-function retrieveItemImpl(item, itemName, itemType, res){
+CubeDescription.prototype.retrieveItemInWholeCube = function (itemName, itemType){
+	return this.retrieveItem(this.cube, itemName, itemType);
+};
+
+CubeDescription.prototype.retrieveItem = function (item, itemName, itemType){
+	return this.retrieveItemImpl(item, itemName, itemType, []);
+};
+
+CubeDescription.prototype.retrieveItemImpl = function (item, itemName, itemType, res){
 	for(var key in item){
 		if(item.hasOwnProperty(key)){
 			if(item[key] instanceof Array){
 				item[key].map(function(a){
-					retrieveItemImpl(a, itemName, itemType, res);
-				});
+					this.retrieveItemImpl(a, itemName, itemType, res);
+				}.bind(this));
 			}else if(key == "name" || key == "type"){
 				if(item[key] == itemName)
 					res.push(item[itemType]);
 			}else{
-				retrieveItemImpl(item[key], itemName, itemType, res);
+				this.retrieveItemImpl(item[key], itemName, itemType, res);
 			}
 		}
 	}
 	return res;
-}
+};
 
-retrieveItem = function retrieveItem(item, itemName, itemType){
-	return retrieveItemImpl(item, itemName, itemType, []);
-}
+CubeDescription.prototype.filterCube = function (pattern){
+	return this.filterItems(cube, pattern);
+};
 
-flat = function flat(item){
-	return flatImpl(item, []);
-}
+CubeDescription.prototype.filterItems = function (items, pattern){
+	var re = new RegExp(pattern, "i");
+	var res = [];
+	//filter on props.items and not state.items
+	this.flattenItem(items).map(function(item){
+		if(item.name.search(re) >= 0)
+			res.push(item);
+	});
+	return res;
+};
 
-// console.log(retrieveItem(cube, "Bookings", "hierarchies"));//get all below this dim
-// console.log(retrieveItem(cube, "HistoricalDates", "levels"));//get all below this hier
-// console.log(flat(cube));
-// console.log(flat(cube.dimensions.dimensions[0]));//only the elements of "Bookings"
+// cubeDescription = new CubeDescription(cube);
+
+// console.log(cubeDescription.retrieveItem(cube, "Bookings", "hierarchies"));//get all below this dim
+// console.log(cubeDescription.retrieveItem(cube, "HistoricalDates", "levels"));//get all below this hier
+// console.log(cubeDescription.flattenItem(cube));
+// console.log(cubeDescription.getCubeDescriptionAsArray());
+// console.log(cubeDescription.flattenItem(cube.dimensions.dimensions[0]));//only the elements of "Bookings"
+// console.log(cubeDescription.filterItems(cube, "Book"));

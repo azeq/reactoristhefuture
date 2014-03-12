@@ -4,7 +4,7 @@ Search = React.createClass({
 	getInitialState : function() {
 		return (
 			{ 
-				items : flat(this.props.items),
+				items : this.props.cubeDescription.getFlatCube(),
 				active : 0
 			 }
 		);
@@ -13,13 +13,7 @@ Search = React.createClass({
 		this.refs.list.getDOMNode().style.visibility = visibility;
 	},
 	onchangeHandler: function() {
-		var re = new RegExp(this.refs.search.getDOMNode().value, "i");
-		var res = [];
-		//filter on props.items and not state.items
-		flat(this.props.items).map(function(item){
-			if(item.name.search(re) >= 0)
-				res.push(item);
-		});
+		var res = this.props.cubeDescription.filterCube(this.refs.search.getDOMNode().value);
 		this.setState({ items : res, active : 0});
 	}, 
 	onkeydownHandler: function(event){
@@ -30,9 +24,10 @@ Search = React.createClass({
 				this.setState({ active : this.state.active + shift });
 		} else if(event.key == "ArrowRight"){
 			if(this.state.items.length > 0){
+				this.refs.search.getDOMNode().value = "";//reset search
 				var item = this.state.items[this.state.active];
-				var newItems = retrieveItem(this.props.items, item.name, typeToSubType[item.type]);
-				newItems = flat(newItems);
+				var newItems = this.props.cubeDescription.retrieveItemInWholeCube(item.name, typeToSubType[item.type]);
+				newItems = this.props.cubeDescription.flattenItem(newItems);
 				if(newItems.length > 0){
 					//add filter item to the list
 					newItems.splice(0, 0, { type : "filter", name : "Create filter" });
@@ -40,7 +35,7 @@ Search = React.createClass({
 				}
 			}
 		} else if(event.key == "ArrowLeft"){
-			this.setState({ items : flat(this.props.items), active : 0 });
+			this.setState({ items : this.props.cubeDescription.getFlatCube(), active : 0 });
 		} else if(event.key == "Enter"){
 			if(this.state.items.length > 0){
 				var item = this.state.items[this.state.active];

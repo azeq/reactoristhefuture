@@ -43,6 +43,7 @@ to {background-color: white;}
 	margin-left: 47px;
 	overflow: auto;
 	visibility: hidden;/*turn it to visible for testing*/
+	z-index: 1;
 }
 
 .search-size{
