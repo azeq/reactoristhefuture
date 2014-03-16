@@ -8,12 +8,15 @@ Wizard = React.createClass({
 		}
 	},
 	run: function() {
-		this.webSocket = new APWebSocket(this.refs.refMdxEditor.getDOMNode().value);//createWebSocket(this.refs.refMdxEditor.getDOMNode().value);
-		this.webSocket.run();
+		var query = this.refs.refMdxEditor.getDOMNode().value;
+		MainWebSocket.getInstance(query).run();
 	},
 	clear: function() {
 		this.refs.refMdxEditor.getDOMNode().value = "";
-		this.webSocket.close();
+		var ws = MainWebSocket.getInstance();
+		if(ws !== undefined && ws !== null){
+			ws.stop();
+		}
 	},
 	openPopup: function() {
 		$('#myModal').modal('show');//show the modal

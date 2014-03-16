@@ -9,7 +9,7 @@ BookmarksHolder = React.createClass({
   },
   clickHandler : function(bk){
     // console.log("Name: "+bk.name+" mdx: "+bk.mdx);
-    createWebSocket(bk.mdx);
+    MainWebSocket.getInstance(bk.mdx).run();
   },
 	render: function () {
     var self = this;

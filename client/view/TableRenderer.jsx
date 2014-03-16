@@ -76,12 +76,17 @@ function cellValue(myData, a, c, b, i, j){
 }
 
 function generateCellValue(member){
+	try{
 	if(member.isTotal || member.isADrilldown)
 		return "Total "+member.displayName;
 	else if(member.displayName == "AllMember")
 		return "Grand Total";
 	else
 		return member.displayName;
+	}catch(err){
+		console.log("Error");
+		console.log(err);
+	}
 }
 
 //for debug

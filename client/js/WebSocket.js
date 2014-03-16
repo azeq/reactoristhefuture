@@ -1,4 +1,4 @@
-
+//shortcut
 function updateConnectionInfo(connectionStateStatus, connectionInfoStatus){
     Session.set("connectionState", {connectionState : connectionStateStatus, connectionInfo : connectionInfoStatus});
 }
@@ -54,14 +54,49 @@ APWebSocket.prototype.onmessage = function(ws, evt) {
 };
 
 APWebSocket.prototype.onclose = function(ws, evt) {
-    Session.set("connectionState", {connectionState : "label-default", connectionInfo : "Not connected"});
+    updateConnectionInfo("label-default", "Not connected");
 };
 
 APWebSocket.prototype.onerror = function(ws, evt) {
-   Session.set("connectionState", {connectionState : "label-danger", connectionInfo : "Error"});
+    updateConnectionInfo("label-danger", "Error");
 };
 
 APWebSocket.prototype.stop = function() {
     this.ws.close();
 };
+
+MainWebSocket = (function () {
+    var instance;
+    var query;
+
+    function createInstance(query) {
+        this.query = query;
+        return new APWebSocket(this.query);
+    }
+
+    return {
+        getInstance: function (query) {
+            if(query !== undefined && query !== null){
+                if (!instance) {
+                    instance = createInstance(query);
+                }else{
+                    if(this.query !== query){
+                        instance.stop();
+                        instance = createInstance(query);
+                    }
+                }
+            }
+            return instance;
+        }
+    };
+})();
+
+
+function run() {
+
+    var instance1 = Singleton.getInstance();
+    var instance2 = Singleton.getInstance();
+
+    alert("Same instance? " + (instance1 === instance2));  
+}
 
