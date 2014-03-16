@@ -139,6 +139,14 @@ CubeDescription.prototype.filterItems = function (items, pattern){
 	return res;
 };
 
+SearchBar = function(cube){
+	this.cubeDescription = new CubeDescription(cube);
+};
+
+SearchBar.prototype.render = function(DOMNodeId) {
+	return Search({cubeDescription: this.cubeDescription});
+};
+
 // cubeDescription = new CubeDescription(cube);
 
 // console.log(cubeDescription.retrieveItem(cube, "Bookings", "hierarchies"));//get all below this dim

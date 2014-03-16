@@ -18,10 +18,10 @@ createWebSocket = function createWebSocket(queryStr) {
             var eventType = obj[1];
             if(eventType == "com.quartetfs.biz.pivot.streaming.impl.CellSetEvent"){
                 this.currentData = obj[0];//store new data
-                // console.log(JSON.stringify(this.currentData));
+                console.log(JSON.stringify(this.currentData));
                 //update state
                 // main.setState({ data: convert(this.currentData) });
-                Session.set("data", convert(this.currentData));
+                Session.set("data", this.currentData);
                 Session.set("connectionState", {connectionState : "label-success", connectionInfo : "Connected"});
                 return;
             }else if(eventType == "com.quartetfs.biz.pivot.streaming.impl.CellEvent"){

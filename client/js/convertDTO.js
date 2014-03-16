@@ -22,7 +22,7 @@ function maxLengthPath(axis){
 	return maxArray;
 }
 
-var debug = false;
+var debug = true;
 var total = debug ? "**" : "";//Total "; //not now
 var cutPath = debug ? "^" : "";
 var dealAllMem = debug ? "$": "";
@@ -39,7 +39,7 @@ convert = function convert(cellSetDtoInit){
 	for(var i = 0; i<n; i += 1){
 	    var axis = cellSetDtoRef.axes[i];
 	    var max = maxLengthPath(axis);//for a given axis, array of the max size of member path, ex [1, 1, 2]
-	    print(max);
+	    // print(max);
 		var positions = axis.positions;
 		var nPos = positions.length;
 		for(var j = 0; j<nPos; j += 1){
@@ -91,7 +91,7 @@ convert = function convert(cellSetDtoInit){
 					for(var l = 1; l<path.length-1; l +=1){
 				 		// print("pos="+j+"  **  k="+k+";s="+s+";l="+l+"  **  "+(s-1+k+l)+"  **  "+path[l]+ "  **  "+path);
 				 		cellSetDto.axes[i].positions[j].members.splice(s+l-1, 0, {"displayName":cutPath+path[l]});
-				 		cellSetDto.axes[i].positions[j].members[s+l-1].path = {};// = path;
+				 		cellSetDto.axes[i].positions[j].members[s+l-1].path = {};
 						cellSetDto.axes[i].positions[j].members[s+l-1].path.path = path.slice(0, l+1);// the last element is exclude
 						cellSetDto.axes[i].positions[j].members[s+l-1].isTotal = false;
 						cellSetDto.axes[i].positions[j].members[s+l-1].isADrilldown = false;
