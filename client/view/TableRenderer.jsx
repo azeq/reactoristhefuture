@@ -27,28 +27,28 @@ tableRendering = function tableRendering(myData){
 			var key = Cantor(i,j);//Cantor function for a unique key
 			if(!(key in map)){
 				//only the header cells are concerned
-				// if(i<c || j<b){
-				// 	if(nextColValue == value && j+1<a+b){
-				// 		colspan += 1;//increase colspan if the following value is the same
-				// 	}else{
-				// 		var rowspan = computeRowSpan(value, myData, a, c, b, d, i, j);//compute rowspan
-				// 		if(rowspan>1){
-				// 			for(var m = i+1; m<i+rowspan; m += 1){
-				// 				for(var n = j-colspan+1; n<=j; n += 1){
-				// 					map[Cantor(m,n)] = [i, j];//store the position of cells that won't be 
-				// 					//visited since rowspan is higher than one
-				// 				}
-				// 			}
-				// 		}
-				// 		// un/comment - useful for debugging
-				// 		// console.log('('+i+','+j+') || rowspan: '+rowspan+' || colspan: '+colspan +' || value: '+value);
-				// 		cells.push(<Header cellValue={value} key={key} colspan={colspan} rowspan={rowspan}/>);
-				// 		colspan = 1;
-				// 	}
-				// }else{
+				if(i<c || j<b){
+					if(nextColValue == value && j+1<a+b){
+						colspan += 1;//increase colspan if the following value is the same
+					}else{
+						var rowspan = computeRowSpan(value, myData, a, c, b, d, i, j);//compute rowspan
+						if(rowspan>1){
+							for(var m = i+1; m<i+rowspan; m += 1){
+								for(var n = j-colspan+1; n<=j; n += 1){
+									map[Cantor(m,n)] = [i, j];//store the position of cells that won't be 
+									//visited since rowspan is higher than one
+								}
+							}
+						}
+						// un/comment - useful for debugging
+						// console.log('('+i+','+j+') || rowspan: '+rowspan+' || colspan: '+colspan +' || value: '+value);
+						cells.push(<Header cellValue={value} key={key} colspan={colspan} rowspan={rowspan}/>);
+						colspan = 1;
+					}
+				}else{
 					//ordinary cell
 					cells.push(<Cell cellValue={value} key={key}/>);
-				// }
+				}
 			}
 		}	
 	rows.push(<Row row={cells} key={i}/>);//push new row in array

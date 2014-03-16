@@ -28,7 +28,7 @@ createWebSocket = function createWebSocket(queryStr) {
                 replaceNewCells(this.currentData, obj[0]);
 
                 // main.setState({ data: convert(this.currentData) });
-                Session.set("data", convert(this.currentData));
+                Session.set("data", this.currentData);
                 Session.set("connectionState", {connectionState : "label-info", connectionInfo : "Updated"});
                 return;
             }

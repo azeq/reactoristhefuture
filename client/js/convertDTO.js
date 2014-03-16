@@ -22,7 +22,7 @@ function maxLengthPath(axis){
 	return maxArray;
 }
 
-var debug = true;
+var debug = false;
 var total = debug ? "**" : "";//Total "; //not now
 var cutPath = debug ? "^" : "";
 var dealAllMem = debug ? "$": "";
@@ -53,8 +53,11 @@ convert = function convert(cellSetDtoInit){
 
 				var memberDisplayName = member.displayName;
 
+				var shi = shift(max, k);//take this index since the index k doesn't mean anythin
+				//a shift could be occurred previously
+
 				//add a attribute, default value
-				cellSetDto.axes[i].positions[j].members[k].isTotal = false;
+				cellSetDto.axes[i].positions[j].members[shi].isTotal = false;
 
 				var isADd = false;
 				//check if it is a drilldown
@@ -67,17 +70,17 @@ convert = function convert(cellSetDtoInit){
 					//if the next member has ALL for level, then it is a total
 					dispNameTotal = member.displayName;//save dispNameTotal
 					memberDisplayName = total+dispNameTotal;
-					cellSetDto.axes[i].positions[j].members[k].displayName = memberDisplayName; 
-					cellSetDto.axes[i].positions[j].members[k].isTotal = true;
-					cellSetDto.axes[i].positions[j].members[k].isADrilldown = isADd;
+					cellSetDto.axes[i].positions[j].members[shi].displayName = memberDisplayName; 
+					cellSetDto.axes[i].positions[j].members[shi].isTotal = true;
+					cellSetDto.axes[i].positions[j].members[shi].isADrilldown = isADd;
 					if(isADd)
 						memberDisplayName = drill3+memberDisplayName;
 					newPath = path.slice(0);//copy path
 				} else if(dispNameTotal != null && member.levelName == "ALL"){
 					//for the last member of a position
 					memberDisplayName = total+dispNameTotal;
-					cellSetDto.axes[i].positions[j].members[k].isTotal = true;
-					cellSetDto.axes[i].positions[j].members[k].isADrilldown = isADd;
+					cellSetDto.axes[i].positions[j].members[shi].isTotal = true;
+					cellSetDto.axes[i].positions[j].members[shi].isADrilldown = isADd;
 					if(isADd)
 						memberDisplayName = drill3+memberDisplayName;
 				}
@@ -85,7 +88,7 @@ convert = function convert(cellSetDtoInit){
 				//add HERE additional members (only for the rendering)
 				// print("pos="+j+"  **  k="+k+"; "+path);
 				var s = computeIndexOfInsertion(max, k);
-				var isTotal = cellSetDto.axes[i].positions[j].members[k].isTotal;//store value before cutting...
+				var isTotal = cellSetDto.axes[i].positions[j].members[shi].isTotal;//store value before cutting...
 				if(path.length > 2){
 				 	//it's a drilldown, need to cut
 					for(var l = 1; l<path.length-1; l +=1){
@@ -157,6 +160,10 @@ function computeIndexOfInsertion(max, k){
 		}
 	}
 	return s;
+}
+
+function shift(max, k){
+	return computeIndexOfInsertion(max, k);
 }
 
 function print(a){
