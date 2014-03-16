@@ -8,7 +8,8 @@ Wizard = React.createClass({
 		}
 	},
 	run: function() {
-		this.webSocket = createWebSocket(this.refs.refMdxEditor.getDOMNode().value);
+		this.webSocket = new APWebSocket(this.refs.refMdxEditor.getDOMNode().value);//createWebSocket(this.refs.refMdxEditor.getDOMNode().value);
+		this.webSocket.run();
 	},
 	clear: function() {
 		this.refs.refMdxEditor.getDOMNode().value = "";
