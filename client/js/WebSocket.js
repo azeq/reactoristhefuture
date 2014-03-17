@@ -36,7 +36,7 @@ APWebSocket.prototype.onmessage = function(ws, evt) {
         var eventType = obj[1];
         if(eventType == "com.quartetfs.biz.pivot.streaming.impl.CellSetEvent"){
                 this.currentData = obj[0];//store new data
-                // console.log(JSON.stringify(this.currentData));
+                console.log(JSON.stringify(this.currentData));
                 //update state
                 Session.set("data", this.currentData);
                 updateConnectionInfo("label-success", "Connected");

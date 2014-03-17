@@ -30,6 +30,7 @@ var lastAllMem = debug ? "€": "";
 var drill1 = debug ? "000" : "";//Equivalent to cut, so ^ equal to this 
 var drill2 = debug ? "---" : "";//Equivalent to cut, so ^ equal to this
 var drill3 = debug ? ";;;" : "";//Equivalent to cut, so ^ equal to this
+var cop = debug ? "\cop/" : "";//copy for drilldown > 1
 
 convert = function convert(cellSetDtoInit){
 	print(cellSetDtoInit);
@@ -53,7 +54,7 @@ convert = function convert(cellSetDtoInit){
 
 				var memberDisplayName = member.displayName;
 
-				var shi = shift(max, k);//take this index since the index k doesn't mean anythin
+				var shi = shift(max, k);//take this index since the index k doesn't mean anything anymore,
 				//a shift could be occurred previously
 
 				//add a attribute, default value
@@ -64,6 +65,11 @@ convert = function convert(cellSetDtoInit){
 				if(j+1 < nPos){
 					isADd = isADrilldown(member, positions[j+1].members[k]);
 				} 
+				cellSetDto.axes[i].positions[j].members[shi].isADrilldown = isADd;
+				if(isADd){
+					memberDisplayName = drill3+memberDisplayName;
+					cellSetDto.axes[i].positions[j].members[shi].displayName = drill3+cellSetDto.axes[i].positions[j].members[shi].displayName;
+				}
 				
 				//first condition to avoid AllMember member
 				if(member.path.path.length > 1 && k+1 < nMem && members[k+1].levelName == "ALL"){
@@ -73,16 +79,16 @@ convert = function convert(cellSetDtoInit){
 					cellSetDto.axes[i].positions[j].members[shi].displayName = memberDisplayName; 
 					cellSetDto.axes[i].positions[j].members[shi].isTotal = true;
 					cellSetDto.axes[i].positions[j].members[shi].isADrilldown = isADd;
-					if(isADd)
-						memberDisplayName = drill3+memberDisplayName;
+					// if(isADd)
+					// 	memberDisplayName = drill3+memberDisplayName;
 					newPath = path.slice(0);//copy path
 				} else if(dispNameTotal != null && member.levelName == "ALL"){
 					//for the last member of a position
 					memberDisplayName = total+dispNameTotal;
 					cellSetDto.axes[i].positions[j].members[shi].isTotal = true;
 					cellSetDto.axes[i].positions[j].members[shi].isADrilldown = isADd;
-					if(isADd)
-						memberDisplayName = drill3+memberDisplayName;
+					// if(isADd)
+					// 	memberDisplayName = drill3+memberDisplayName;
 				}
 
 				//add HERE additional members (only for the rendering)
@@ -91,7 +97,7 @@ convert = function convert(cellSetDtoInit){
 				var isTotal = cellSetDto.axes[i].positions[j].members[shi].isTotal;//store value before cutting...
 				if(path.length > 2){
 				 	//it's a drilldown, need to cut
-					for(var l = 1; l<path.length-1; l +=1){
+					for(var l = 1; l < path.length-1; l +=1){
 				 		// print("pos="+j+"  **  k="+k+";s="+s+";l="+l+"  **  "+(s-1+k+l)+"  **  "+path[l]+ "  **  "+path);
 				 		cellSetDto.axes[i].positions[j].members.splice(s+l-1, 0, {"displayName":cutPath+path[l]});
 				 		cellSetDto.axes[i].positions[j].members[s+l-1].path = {};
@@ -99,9 +105,19 @@ convert = function convert(cellSetDtoInit){
 						cellSetDto.axes[i].positions[j].members[s+l-1].isTotal = false;
 						cellSetDto.axes[i].positions[j].members[s+l-1].isADrilldown = false;
 				 	}
+
+				 	var N = max[k]-(path.length-1);//to deal with dilldown > 1 
+				 	if(N>0){
+				 		var startIndex = s+path.length-1;
+				 		var copy = JSON.parse(JSON.stringify(cellSetDto.axes[i].positions[j].members[startIndex-1]));
+				 		copy.displayName = cop+copy.displayName;//change name for debug
+				 		for(var l = 0; l < N; l += 1){
+				 			cellSetDto.axes[i].positions[j].members.splice(startIndex+l, 0, copy);
+				 		}
+				 	}
 				} else{
 					//deals AllMember only
-					for(var l = 0; l<max[k]-1; l +=1){
+					for(var l = 0; l < max[k]-1; l +=1){
 						// print("pos="+j+"  **  k="+k+";s="+s+";l="+l+"  **  "+(s)+"  **  "+path[l]+ "  **  "+path);
 						cellSetDto.axes[i].positions[j].members.splice(s+l, 0, {"displayName":dealAllMem+memberDisplayName});
 						cellSetDto.axes[i].positions[j].members[s+l].path = {};// = path;
@@ -112,7 +128,7 @@ convert = function convert(cellSetDtoInit){
 							cellSetDto.axes[i].positions[j].members[s+l].displayName = drill2+cellSetDto.axes[i].positions[j].members[s+l].displayName;
 					}
 					cellSetDto.axes[i].positions[j].members[s+max[k]-1].displayName = lastAllMem+memberDisplayName;
-					cellSetDto.axes[i].positions[j].members[s+max[k]-1].path = {};// = path;
+					cellSetDto.axes[i].positions[j].members[s+max[k]-1].path = {};
 					cellSetDto.axes[i].positions[j].members[s+max[k]-1].path.path = newPath != null ? newPath.slice(0) : path.slice(0);//copy the path of the member
 					cellSetDto.axes[i].positions[j].members[s+max[k]-1].isTotal = isTotal;
 					cellSetDto.axes[i].positions[j].members[s+max[k]-1].isADrilldown = isADd;
