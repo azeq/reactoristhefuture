@@ -1,13 +1,3 @@
-search_data = [
-	"Bookings",
-	"Time",
-	"Underlyings",
-	"Products",
-	"TimeBucket",
-	"BookId",
-	"Desk"
-];
-
 cube = 
 {
 	"dimensions" : {
@@ -144,7 +134,8 @@ SearchBar = function(cube){
 };
 
 SearchBar.prototype.render = function(DOMNodeId) {
-	return Search({cubeDescription: this.cubeDescription});
+	// return Search({cubeDescription: this.cubeDescription});
+	return NavBar({cubeDescription: this.cubeDescription});
 };
 
 // cubeDescription = new CubeDescription(cube);

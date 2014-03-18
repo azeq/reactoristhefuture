@@ -24,39 +24,18 @@ var Left = React.createClass({
 var Right = React.createClass({
 	render: function () {
 		return (
-			<div className="col-md-9">
-	            <Table/>
-	        </div>
+			<Table/>
         );
 	}
 });
-
-searchBar = new SearchBar(cube);//there is no interest to do that...
-//<Search cubeDescription={new CubeDescription(cube)}/>
-
-//Uncomment to draw only table
-// Main = React.createClass({
-// 	render: function () {
-// 		return (
-// 			<div>
-// 				<div className="container-fluid" id="main">
-// 						<Right/>
-// 	            </div>
-//             </div>
-//         );
-// 	}
-// });
 
 Main = React.createClass({
 	render: function () {
 		return (
 			<div>
-				{searchBar.render()}
+				<NavBar cubeDescription={new CubeDescription(cube)}/>
 				<div className="container-fluid" id="main">
-					<div className="row">
-						<Left/>
-						<Right/>
-		            </div>
+					<Right/>
 	            </div>
             </div>
         );

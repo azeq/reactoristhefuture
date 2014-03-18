@@ -40,7 +40,7 @@ to {background-color: white;}
 	max-height: 247px;
 	position: absolute;
 	top: 45px;
-	margin-left: 47px;
+	margin-left: 0px;
 	overflow: auto;
 	visibility: hidden;/*turn it to visible for testing*/
 	z-index: 1;
