@@ -49,3 +49,14 @@ to {background-color: white;}
 .search-size{
 	width: 500px !important;
 }
+
+.mdxEditor{
+	width: 250px;
+	position: absolute;
+	top: 35px;
+	left: 130px;
+}
+
+textarea.mdx{
+	box-shadow: 0 3px 14px 0px #888888;
+}

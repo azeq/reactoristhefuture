@@ -109,14 +109,7 @@ NavBar = React.createClass({
 					<div className="container-fluid">
 
 						<div className="navbar-header">
-							<div className="btn-group">
-								<button type="button" className="btn btn-default navbar-btn">
-									<span className="glyphicon glyphicon-th-large"></span>
-								</button>		
-								<button type="button" className="btn btn-default navbar-btn">
-									<span className="glyphicon glyphicon-cog"></span>
-								</button>
-							</div>
+							<WizardNavBar/>
 						</div>
 
 						<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -127,15 +120,7 @@ NavBar = React.createClass({
 							</form>
 
 							<ul className="nav navbar-nav navbar-right">
-								<li className="dropdown">
-									<a href="#ss" className="dropdown-toggle" data-toggle="dropdown">Wizard <b className="caret"></b></a>
-									<ul className="dropdown-menu">
-										<div style={{ width: 400, padding: 10 }}>
-											<Wizard/>
-										</div>
-									</ul>
-								</li>
-
+							
 								<li className="dropdown">
 									<a href="#ss" className="dropdown-toggle" data-toggle="dropdown">Bookmarks <b className="caret"></b></a>
 									<ul className="dropdown-menu">
@@ -144,6 +129,7 @@ NavBar = React.createClass({
 										</div>
 									</ul>
 								</li>
+
 							</ul>
 						</div>
 
