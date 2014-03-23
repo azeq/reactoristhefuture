@@ -86,7 +86,7 @@ List = React.createClass({
 					gly += " glyphicon-screenshot";
 					break;
 				case "filter":
-					gly += " glyphicon-cog";
+					gly += " glyphicon-filter";
 					cl += " list-group-item-warning";
 					break;
 			}
@@ -124,7 +124,7 @@ NavBar = React.createClass({
 								<li className="dropdown">
 									<a href="#ss" className="dropdown-toggle" data-toggle="dropdown">Bookmarks <b className="caret"></b></a>
 									<ul className="dropdown-menu">
-										<div style={{ width: 400, padding: 10 }}>
+										<div className="bookmarksHolder">
 											<BookmarksHolder/>
 										</div>
 									</ul>

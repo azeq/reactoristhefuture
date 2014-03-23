@@ -19,17 +19,17 @@ if (Meteor.isClient) {
     var bks = Bookmarks.find().fetch();
     if (bks){
       Session.set("bks", bks);
-      // console.log("Bookmarks have been updated");       
+      console.log("Bookmarks have been updated");       
     }
   });  
 
   Deps.autorun(function () {
     var bkToBeSaved = Session.get("saveBk");
     if(bkToBeSaved){
-      // console.log("Saving bookmark...");
-      // console.log(bkToBeSaved);
+      console.log("Saving bookmark...");
+      console.log(bkToBeSaved);
       Bookmarks.insert(bkToBeSaved, function(){
-        // console.log("Bookmark saved in the DB");
+        console.log("Bookmark saved in the DB");
       });
     }
   });

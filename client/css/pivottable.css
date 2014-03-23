@@ -60,3 +60,12 @@ to {background-color: white;}
 textarea.mdx{
 	box-shadow: 0 3px 14px 0px #888888;
 }
+
+.bookmarksHolder{
+	width: 400px;
+	padding: 10px;
+}
+
+.bookmarks-list{
+	margin-bottom: 0;
+}
