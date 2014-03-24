@@ -54,7 +54,7 @@ Table = React.createClass({
   },
 	render: function () {
 		return (
-			<table className="table table-bordered"><tbody>
+			<table className="table table-bordered table-condensed table-hover"><tbody>
 			{
 				tableRendering(this.state.data)
 			}
