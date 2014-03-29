@@ -207,12 +207,12 @@ MiniWizard = React.createClass({
 	render: function(){
 		var wizelts = this.props.wizardElements; 
 		return(
-			<p>
+			<li>
 				<NavBarElement title={"Rows"} elements={wizelts.elements.rows}/>
 				<NavBarElement title={"Columns"} elements={wizelts.elements.columns}/>
 				<NavBarElement title={"Filters"} elements={wizelts.elements.filters}/>
 				<NavBarElement title={"Measures"} elements={wizelts.elements.measures}/>
-			</p>
+			</li>
 		);
 	}
 });
